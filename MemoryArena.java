@@ -77,4 +77,15 @@ public class MemoryArena {
     public int getNext(int nodeAddr) {
         return getInt(nodeAddr + NEXT_OFFSET);
     }
+
+    public void printList(int headAddr) {
+        if (headAddr == -1) {
+            return;
+        }
+        System.out.print(getValue(headAddr) + " ");
+        while (getNext(headAddr) != -1) {
+            headAddr = getNext(headAddr);
+            System.out.print(getValue(headAddr) + " ");
+        }
+    }
 }

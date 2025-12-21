@@ -42,13 +42,20 @@ public class Main {
         System.out.println();
         int node1 = arena.createNode(10);
         int node2 = arena.createNode(20);
+        int node3 = arena.createNode(30);
 
         System.out.println(node1);
         System.out.println(node2);
 
+        //form linked list
         arena.setNext(node1, node2);
+        arena.setNext(node2, node3);
 
-        System.out.println(arena.getNext(node1));
+        //grab next value in linked list
+        System.out.println(arena.getNext(node1) + " f");
+
+        //print entire linked list
+        arena.printList(node1);
 
     }
 }
