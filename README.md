@@ -6,13 +6,13 @@ This project is a from-scratch, educational implementation of a manual memory ar
 
 ## Motivation
 
-After ~4 years of programming in Java, a persistent, sizable chunk of its functionality as a language still feels opaque and abstract because of how it manages things under the hood.
+After ~4 years of programming in Java, a persistent and sizable chunk of its functionality as a language still feels opaque and abstract because of how it manages things under the hood:
 
 - Objects appear without visible allocation
 - Memory is automatically managed
 - References feel disconnected from actual memory
 
-This project removes that abstraction.
+This project aims to remove that abstraction.
 
 Everything here is built on top of a single `byte[]`, and all structures, safety measures, and meaning are implemented manually.
 
@@ -205,18 +205,4 @@ The implementation prioritizes clarity, correctness, and explicit control over p
 
  
 
-## Audience
-
-This project is intended for:
-
-- Developers interested in systems-level concepts in managed languages
-- Students studying memory management, data layout, or low-level runtime behavior
-- Engineers who want a concrete model for how high-level abstractions map to raw memory
-
  
-
-## Final Note
-
-This project is designed to model memory management concepts precisely and transparently.
-
-Every abstraction in the code exists to make memory behavior observable and debuggable. The focus is on correctness, explicit invariants, and clear structure rather than convenience or hidden behavior.
