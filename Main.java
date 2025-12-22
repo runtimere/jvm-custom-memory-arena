@@ -36,8 +36,7 @@ public class Main {
         System.out.println(Integer.toHexString(arena.memory[3]));
 
         // big endian byte read
-        System.out.println(Integer.toHexString(arena.getInt(0)));
-        //node tests
+        System.out.println(Integer.toHexString(arena.getInt(0))); 
         arena.reset();
         System.out.println();
         int node1 = arena.createNode(10);
@@ -50,12 +49,16 @@ public class Main {
         //form linked list
         arena.setNext(node1, node2);
         arena.setNext(node2, node3);
-
-        //grab next value in linked list
         System.out.println(arena.getNext(node1) + " f");
 
-        //print entire linked list
         arena.printList(node1);
+
+        //bounds detection
+        // arena.getInt(127);
+        // arena.getValue(-1);
+        // arena.setNext(node1, 99999);
+        // arena.setNext(node2, -1);
+
 
     }
 }
