@@ -79,9 +79,9 @@
 ## Phase 4: Advanced Memory Management
 
 ### 4.1 Add Memory Regions/Segments
-- [ ] Create MemoryRegion class
-- [ ] Track multiple regions
-- [ ] Validate addresses against regions
+- [x] Create MemoryRegion class
+- [x] Track multiple regions
+- [x] Validate addresses against regions
 
 ### 4.2 Implement Free List Allocator (Optional)
 - [ ] Track freed blocks

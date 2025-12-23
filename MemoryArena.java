@@ -1,7 +1,11 @@
+import java.util.ArrayList;
+import java.util.List;
+
 public class MemoryArena {
     public final byte[] memory;
     private int offset = 0;
     private int alignmentWaste = 0;
+    private List<MemoryRegion> regions = new ArrayList<>();
 
     public MemoryArena(int size) {
         memory = new byte[size];
@@ -43,6 +47,7 @@ public class MemoryArena {
     public void reset() {
         offset = 0;
         alignmentWaste = 0;
+        regions.clear();
     }
 
     public int capacity() {
@@ -158,5 +163,70 @@ public class MemoryArena {
 
     public void resetAlignmentWaste() {
         alignmentWaste = 0;
+    }
+
+    public MemoryRegion createRegion(int startAddr, int size, String name) {
+        if (startAddr < 0 || startAddr + size > memory.length) {
+            throw new InvalidAddressException(startAddr, size, offset, capacity());
+        }
+        
+        MemoryRegion region = new MemoryRegion(startAddr, startAddr + size, name);
+        
+        for (MemoryRegion existing : regions) {
+            if (region.overlaps(existing)) {
+                throw new RuntimeException("Region overlaps with existing region: " + existing);
+            }
+        }
+        
+        regions.add(region);
+        return region;
+    }
+
+    public MemoryRegion createRegionAtOffset(int size, String name) {
+        int startAddr = offset;
+        int endAddr = startAddr + size;
+        
+        if (endAddr > memory.length) {
+            throw new OutOfMemoryException(size, remaining(), capacity(), offset);
+        }
+        
+        MemoryRegion region = new MemoryRegion(startAddr, endAddr, name);
+        regions.add(region);
+        offset = endAddr;
+        return region;
+    }
+
+    public MemoryRegion findRegion(int addr) {
+        for (MemoryRegion region : regions) {
+            if (region.contains(addr)) {
+                return region;
+            }
+        }
+        return null;
+    }
+
+    public MemoryRegion findRegionForRange(int addr, int size) {
+        for (MemoryRegion region : regions) {
+            if (region.containsRange(addr, size)) {
+                return region;
+            }
+        }
+        return null;
+    }
+
+    public List<MemoryRegion> getAllRegions() {
+        return new ArrayList<>(regions);
+    }
+
+    public void clearRegions() {
+        regions.clear();
+    }
+
+    public boolean validateAddressInRegion(int addr, String regionName) {
+        MemoryRegion region = findRegion(addr);
+        if (region == null) {
+            return false;
+        }
+        return regionName == null || region.getName().equals(regionName);
     }
 }

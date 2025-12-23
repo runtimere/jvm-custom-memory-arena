@@ -14,6 +14,7 @@ public class Main {
         testVectorStore();
         testStringStore();
         testHashTableStore();
+        testMemoryRegions();
     }
 
     static void testBasicAllocation() {
@@ -514,6 +515,56 @@ public class Main {
         System.out.println("  Entry layout: [key:4B][value:4B][next:4B]");
         System.out.println("  Collision resolution: Chaining (linked lists)");
         System.out.println("  Hash function: key % bucketCount");
+        System.out.println();
+    }
+
+    static void testMemoryRegions() {
+        System.out.println("Test 14: Memory Regions/Segments");
+        MemoryArena arena = new MemoryArena(256);
+        
+        System.out.println("Creating named memory regions:");
+        MemoryRegion region1 = arena.createRegionAtOffset(32, "Stack");
+        System.out.println("  " + region1);
+        
+        MemoryRegion region2 = arena.createRegionAtOffset(64, "Heap");
+        System.out.println("  " + region2);
+        
+        MemoryRegion region3 = arena.createRegion(128, 32, "Data");
+        System.out.println("  " + region3);
+        
+        System.out.println("\nQuerying regions:");
+        System.out.println("  Address 10 in region: " + arena.findRegion(10));
+        System.out.println("  Address 50 in region: " + arena.findRegion(50));
+        System.out.println("  Address 140 in region: " + arena.findRegion(140));
+        System.out.println("  Address 200 in region: " + arena.findRegion(200));
+        
+        System.out.println("\nValidating address ranges:");
+        MemoryRegion stackRegion = arena.findRegionForRange(0, 32);
+        System.out.println("  Range [0-32] in region: " + stackRegion);
+        MemoryRegion heapRegion = arena.findRegionForRange(32, 64);
+        System.out.println("  Range [32-96] in region: " + heapRegion);
+        
+        System.out.println("\nAll regions:");
+        for (MemoryRegion region : arena.getAllRegions()) {
+            System.out.println("  " + region);
+        }
+        
+        System.out.println("\nTesting region validation:");
+        System.out.println("  Address 10 in 'Stack': " + arena.validateAddressInRegion(10, "Stack"));
+        System.out.println("  Address 10 in 'Heap': " + arena.validateAddressInRegion(10, "Heap"));
+        System.out.println("  Address 50 in 'Heap': " + arena.validateAddressInRegion(50, "Heap"));
+        
+        System.out.println("\nTesting overlap prevention:");
+        try {
+            arena.createRegion(30, 10, "Overlap");
+        } catch (RuntimeException e) {
+            System.out.println("  Caught: " + e.getMessage());
+        }
+        
+        System.out.println("\nMemory region details:");
+        System.out.println("  Regions allow organizing memory into logical segments");
+        System.out.println("  Useful for: stack/heap separation, memory pools, debugging");
+        System.out.println("  Overlap detection prevents invalid memory organization");
         System.out.println();
     }
 }
